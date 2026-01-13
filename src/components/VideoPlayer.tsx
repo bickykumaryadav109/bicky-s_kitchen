@@ -1,4 +1,4 @@
-import { Play, Pause, RefreshCw, Loader2, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, RefreshCw, Loader2, Volume2, VolumeX, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -50,15 +50,30 @@ export function VideoPlayer({ videoFrames = [], instructions = [], videoId, sear
     // Fallback: Client-Side Embed Search (Safe for Vercel)
     if (searchQuery) {
         const encodedQuery = encodeURIComponent(searchQuery);
+        // Using window.location.origin for the origin parameter can help with embed restrictions
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
         return (
-            <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
-                <iframe
-                    className="w-full h-full"
-                    src={`https://www.youtube.com/embed?listType=search&list=${encodedQuery}&autoplay=1&loop=1&rel=0`}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                />
+            <div className="space-y-4">
+                <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+                    <iframe
+                        className="w-full h-full"
+                        src={`https://www.youtube.com/embed?listType=search&list=${encodedQuery}&autoplay=1&loop=1&rel=0&origin=${origin}`}
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                </div>
+                <div className="flex justify-center">
+                    <a
+                        href={`https://www.youtube.com/results?search_query=${encodedQuery}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-muted-foreground hover:text-primary underline flex items-center gap-1"
+                    >
+                        Video not playing? Watch on YouTube <ExternalLink className="w-3 h-3" />
+                    </a>
+                </div>
             </div>
         );
     }
