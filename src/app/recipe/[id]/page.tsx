@@ -75,6 +75,7 @@ function RecipeContent() {
                         videoFrames={recipe.videoFrames || []}
                         instructions={recipe.instructions || []}
                         videoId={recipe.videoId}
+                        searchQuery={recipe.searchQuery}
                     />
                     <div className="mt-6 flex justify-center">
                         <Link href="/book-chef">

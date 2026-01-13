@@ -33,34 +33,10 @@ export async function POST(request: Request) {
         // 1. Generate Recipe Text
         const recipe = generateRecipeText(ingredients);
 
-        // 2. Search for Real YouTube Video
-        let videoId = null;
-        /* 
-           Temporarily disabling YouTube search to debug Vercel "Unexpected end of JSON" error.
-           It seems yt-search might be causing the serverless function to crash or timeout.
-        
-        try {
-            // Search query: e.g. "Chicken Fish Recipe"
-            const query = `${ingredients.join(' ')} recipe`;
-            
-            // Wraps yt-search in a timeout to prevent Vercel function freeze/timeout
-            const searchPromise = yts(query);
-            const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Search timed out')), 4000)
-            );
-
-            // @ts-ignore - yts types might conflict with Promise.race depending on version
-            const searchResult: any = await Promise.race([searchPromise, timeoutPromise]);
-
-            if (searchResult && searchResult.videos && searchResult.videos.length > 0) {
-                // Get the top video
-                videoId = searchResult.videos[0].videoId;
-            }
-        } catch (err) {
-            console.error("YouTube search failed or timed out:", err);
-            // Fallback to null, which will trigger the procedural video
-        }
-        */
+        // 2. Prepare Search Query for Client-Side Player
+        // We no longer search on the server to avoid Vercel timeouts.
+        // Instead, we pass this query to the frontend to use in an iframe.
+        const searchQuery = `${ingredients.join(' ')} recipe`;
 
         // 3. Generate Procedural Video Frames (Fallback / Enhancer)
         const videoFrames = recipe.instructions.map((step, index) => {
@@ -79,7 +55,8 @@ export async function POST(request: Request) {
         return NextResponse.json({
             ...recipe,
             videoFrames, // Array of image URLs to play as video
-            videoId // Real YouTube ID
+            videoId: null, // Legacy support
+            searchQuery // Pass the query to the frontend
         });
 
     } catch (error) {

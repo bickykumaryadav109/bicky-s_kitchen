@@ -6,9 +6,10 @@ interface VideoPlayerProps {
     videoFrames?: string[]; // Array of image URLs
     instructions?: string[]; // Array of subtitle texts
     videoId?: string | null; // YouTube Video ID
+    searchQuery?: string; // Search term for embed
 }
 
-export function VideoPlayer({ videoFrames = [], instructions = [], videoId }: VideoPlayerProps) {
+export function VideoPlayer({ videoFrames = [], instructions = [], videoId, searchQuery }: VideoPlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentFrame, setCurrentFrame] = useState(0);
     const [isMuted, setIsMuted] = useState(true);
@@ -38,6 +39,22 @@ export function VideoPlayer({ videoFrames = [], instructions = [], videoId }: Vi
                 <iframe
                     className="w-full h-full"
                     src={`https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&rel=0`}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                />
+            </div>
+        );
+    }
+
+    // Fallback: Client-Side Embed Search (Safe for Vercel)
+    if (searchQuery) {
+        const encodedQuery = encodeURIComponent(searchQuery);
+        return (
+            <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+                <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed?listType=search&list=${encodedQuery}&autoplay=1&loop=1&rel=0`}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
