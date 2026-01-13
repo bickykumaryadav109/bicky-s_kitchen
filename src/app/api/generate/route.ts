@@ -38,14 +38,22 @@ export async function POST(request: Request) {
         try {
             // Search query: e.g. "Chicken Fish Recipe"
             const query = `${ingredients.join(' ')} recipe`;
-            const searchResult = await yts(query);
+
+            // Wraps yt-search in a timeout to prevent Vercel function freeze/timeout
+            const searchPromise = yts(query);
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Search timed out')), 4000)
+            );
+
+            // @ts-ignore - yts types might conflict with Promise.race depending on version
+            const searchResult: any = await Promise.race([searchPromise, timeoutPromise]);
 
             if (searchResult && searchResult.videos && searchResult.videos.length > 0) {
                 // Get the top video
                 videoId = searchResult.videos[0].videoId;
             }
         } catch (err) {
-            console.error("YouTube search failed:", err);
+            console.error("YouTube search failed or timed out:", err);
             // Fallback to null, which will trigger the procedural video
         }
 
