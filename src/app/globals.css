@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  /* Premium Kitchen Palette */
+  /* Emerald Green - Freshness */
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
+
+  /* Warm Orange - Cooking/Fire */
+  --secondary: #f97316;
+  --secondary-foreground: #ffffff;
+
+  /* Neutrals */
+  --background: #fdfbf7;
+  /* Warm off-white */
+  --foreground: #1c1917;
+  /* Warm black */
+
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+
+  --muted: #f5f5f4;
+  --muted-foreground: #78716c;
+
+  --border: #e7e5e4;
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --radius-lg: var(--radius);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0c0a09;
+    --foreground: #fafaf9;
+
+    --card: #1c1917;
+    --card-foreground: #fafaf9;
+
+    --muted: #292524;
+    --muted-foreground: #a8a29e;
+
+    --border: #292524;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+  opacity: 0.5;
+}
