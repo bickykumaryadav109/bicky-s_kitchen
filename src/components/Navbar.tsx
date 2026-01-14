@@ -67,6 +67,10 @@ export function Navbar() {
                             Generate Recipe
                         </motion.div>
                     </Link>
+
+                    <a href="/api/auth/signin" className="text-sm font-medium hover:text-primary transition-colors">
+                        Sign In
+                    </a>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -123,6 +127,13 @@ export function Navbar() {
                                 <Sparkles className="w-4 h-4" />
                                 Generate Recipe
                             </Link>
+                            <a
+                                href="/api/auth/signin"
+                                onClick={() => setIsOpen(false)}
+                                className="text-sm font-medium py-2 hover:text-primary"
+                            >
+                                Sign In
+                            </a>
                         </div>
                     </motion.div>
                 )}
