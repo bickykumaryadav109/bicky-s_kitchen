@@ -57,6 +57,9 @@ export function Navbar() {
                     <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors">
                         Recipes
                     </Link>
+                    <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+                        Cookbook
+                    </Link>
                     <Link href="/generate">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
