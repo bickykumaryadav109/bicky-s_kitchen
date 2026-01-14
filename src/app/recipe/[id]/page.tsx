@@ -3,7 +3,7 @@
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { RecipeCard } from '@/components/RecipeCard';
 import { motion } from 'framer-motion';
-import { Share2, Heart, ArrowLeft, ChefHat } from 'lucide-react';
+import { Share2, Heart, ArrowLeft, ChefHat, Bookmark } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -13,6 +13,37 @@ import { getRecipeById } from '@/data/recipes';
 function RecipeContent() {
     const { id } = useParams() as { id: string };
     const [recipe, setRecipe] = useState<any>(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const router = useRouter();
+
+    const handleSave = async () => {
+        if (!recipe) return;
+        setIsSaving(true);
+        try {
+            const response = await fetch('/api/recipes/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(recipe),
+            });
+
+            if (response.status === 401) {
+                // Not logged in
+                window.location.href = "/api/auth/signin";
+                return;
+            }
+
+            if (response.ok) {
+                alert("Recipe saved to your cookbook!");
+            } else {
+                alert("Failed to save recipe.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("An error occurred.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     useEffect(() => {
         if (id === 'generated') {
@@ -58,8 +89,13 @@ function RecipeContent() {
                 </div>
 
                 <div className="flex gap-3">
-                    <button className="p-3 rounded-full hover:bg-muted transition-colors border border-border">
-                        <Heart className="w-5 h-5" />
+                    <button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-medium flex items-center gap-2"
+                    >
+                        <Bookmark className="w-5 h-5" />
+                        {isSaving ? "Saving..." : "Save"}
                     </button>
                     <button className="p-3 rounded-full hover:bg-muted transition-colors border border-border">
                         <Share2 className="w-5 h-5" />
